@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Service extends Model
 {
     //
-    protected $fillable = ['nom', 'description'];
+    protected $fillable = ['name', 'description'];
 
     // Relation many-to-many avec les prestataires
     public function prestataires()

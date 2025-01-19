@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('prestataire_service', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('prestataire_id')->constrained()->onDelete('cascade');
+            $table->foreignId('service_id')->constrained()->onDelete('cascade');
+            $table->integer('prix');
+            // $table->integer('date');
             $table->timestamps();
         });
     }

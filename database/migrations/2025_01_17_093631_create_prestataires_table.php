@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('prestataires', function (Blueprint $table) {
             $table->id();
+            $table->integer('status')->default(0);
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Clé étrangère vers `users`
             $table->timestamps();
         });
