@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('client_id')->constrained('users')->onDelete('cascade'); // Clé étrangère vers users (clients)
             $table->foreignId('prestataire_id')->constrained('users')->onDelete('cascade'); // Clé étrangère vers users (prestataires)
             $table->foreignId('service_id')->constrained('services')->onDelete('cascade'); // Clé étrangère vers services
-            $table->string('statut')->default('en attente'); // Statut de la réservation
+            $table->string('statut')->default('en_attente'); // Statut de la réservation
             $table->date('reservation_date'); // Date de la réservation
             $table->timestamps();
         });

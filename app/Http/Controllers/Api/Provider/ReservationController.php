@@ -11,7 +11,8 @@ class ReservationController extends Controller
 {
     public function index()
     {
-        $provider = Auth::user()->provider;
+        $provider = Auth::user()->prestataire;
+        
 
         // Vérifier si le prestataire existe
         if (!$provider) {
@@ -22,7 +23,7 @@ class ReservationController extends Controller
         }
 
         // Récupérer toutes les réservations du prestataire
-        $reservations = Reservation::with(['client', 'prestataire', 'service'])
+        $reservations = Reservation::with(['client', 'client.user', 'prestataire','prestataire.user', 'service'])
             ->where('prestataire_id', $provider->id) // Filtrer par l'ID du prestataire
             ->get();
 

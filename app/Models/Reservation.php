@@ -28,4 +28,9 @@ class Reservation extends Model
     {
         return $this->belongsTo(Service::class);
     }
+    // Relation avec le client
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
 }

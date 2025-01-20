@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Service extends Model
 {
     //
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['id','name', 'description'];
 
     // Relation many-to-many avec les prestataires
     public function prestataires()
     {
-        return $this->belongsToMany(Prestataire::class, 'prestataire_service', 'service_id', 'prestataire_id');
+        return $this->belongsToMany(Prestataire::class, 'prestataire_service', 'service_id', 'prestataire_id')->withPivot('prix');
     }
 }
