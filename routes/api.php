@@ -39,6 +39,7 @@ Route::middleware(['auth:sanctum', 'role:provider'])
         Route::post('/reservation/{reservationId}/validate', [ProviderReservationController::class, 'validateReservation']);
         //services
         Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+        Route::post('/create/service', [ServiceController::class, 'store']);
         Route::post('/add/service', [ServiceController::class, 'providerService']);
         Route::get('/recuperer/services', [ServiceController::class, 'getPrestataireServices']);
         // Récupérer les services auxquels le prestataire s'est abonné

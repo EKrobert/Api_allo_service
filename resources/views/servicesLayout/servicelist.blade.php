@@ -24,14 +24,14 @@
                                     <thead>
                                         <tr>
                                             <th>Nom du service</th>
-                                            <th>Actions</th>
+                                            {{-- <th>Actions</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($services as $service)
                                             <tr>
                                                 <td>{{ $service->name }}</td>
-                                                <td>
+                                                {{-- <td>
                                                     <div class="flex align-items-center">
                                                         <!-- <a class="iq-bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add" href="#"><i class="ri-user-add-line"></i></a> -->
                                                         <a class="btn btn-outline-info btn-sm" data-toggle="tooltip"
@@ -56,7 +56,7 @@
                                                     </div>
 
                             </div>
-                            </td>
+                            </td> --}}
                             </tr>
                             @endforeach
                             </tbody>
