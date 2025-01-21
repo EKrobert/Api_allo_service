@@ -42,7 +42,6 @@ class ServicesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|unique:services',
-            'description' => 'required'
         ]);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors())->withInput();

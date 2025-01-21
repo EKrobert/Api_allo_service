@@ -69,7 +69,7 @@
         <li class="nav-item">
             <a class="nav-link collapsed @if (request()->is('reservations*')) active @endif" data-bs-target="#reservations"
                 data-bs-toggle="collapse" href="#">
-                <i class="bi bi-calendar-check"></i><span>Prestataires</span><i
+                <i class="bi bi-calendar-check"></i><span>Reservaions</span><i
                     class="bi bi-chevron-down ms-auto @if (request()->is('reservations*')) rotate180 @endif"></i>
             </a>
             <ul id="reservations" class="nav-content collapse @if (request()->is('reservations*')) show @endif"
@@ -77,7 +77,7 @@
                 <li>
                     <a href="{{ route('reservations.index') }}"
                         class="{{ request()->routeIs('reservations.index') ? 'active' : '' }}">
-                        <i class="bi bi-circle"></i><span>Liste des prestataires</span>
+                        <i class="bi bi-circle"></i><span>Liste des reservations</span>
                     </a>
                 </li>
 

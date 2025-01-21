@@ -41,7 +41,7 @@
                             <div class="iq-card">
                                 <div class="iq-card-body">
                                     <div class="form-group">
-                                        <label for="name">Nom:</label>
+                                        <label for="name">Titre:</label>
                                         <input type="text" class="form-control" id="name" name="name"
                                             minlength="2" maxlength="50" pattern="^[A-Za-zÀ-ÿ\s'\-]+$"
                                             title="Caractères alphabétiques uniquement, y compris les caractères spéciaux tels que é, ï, à, ÿ, ', -, et espace"
@@ -50,7 +50,7 @@
 
                                     <div class="form-group">
                                         <label for="des">Description:</label>
-                                        <input type="text" class="form-control" id="des" name="description" required>
+                                        <input type="text" class="form-control" id="des" name="description">
                                     </div>
 
                                     <div class="form-group col-md-12">

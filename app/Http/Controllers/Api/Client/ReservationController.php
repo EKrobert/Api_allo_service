@@ -102,12 +102,17 @@ class ReservationController extends Controller
         if (!$reservation) {
             return response()->json(['message' => 'Réservation non trouvée'], 404);
         }
-
+        $price = $reservation->prestataire->services()
+        ->where('services.id', $reservation->service_id)
+        ->first()
+        ->pivot
+        ->prix;
         // Retourner les détails de la réservation
         return response()->json([
             'reservation' => $reservation,
             'service' => $reservation->service,
             'prestataire' => $reservation->prestataire->user,
+            'prix'=> $price,
         ], 200);
     }
 
