@@ -46,26 +46,44 @@
                 </li>
             </ul>
         </li>
-        <!--Partners-->
+        <!--users-->
         <li class="nav-item">
-            <a class="nav-link collapsed @if (request()->is('partners*')) active @endif" data-bs-target="#partners"
+            <a class="nav-link collapsed @if (request()->is('users*')) active @endif" data-bs-target="#users"
                 data-bs-toggle="collapse" href="#">
                 <i class="bi bi-people"></i><span>Prestataires</span><i
-                    class="bi bi-chevron-down ms-auto @if (request()->is('partners*')) rotate180 @endif"></i>
+                    class="bi bi-chevron-down ms-auto @if (request()->is('users*')) rotate180 @endif"></i>
             </a>
-            <ul id="partners" class="nav-content collapse @if (request()->is('partners*')) show @endif"
+            <ul id="users" class="nav-content collapse @if (request()->is('users*')) show @endif"
                 data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="{{ route('partners.index') }}"
-                        class="{{ request()->routeIs('partners.index') ? 'active' : '' }}">
+                    <a href="{{ route('users.index') }}"
+                        class="{{ request()->routeIs('users.index') ? 'active' : '' }}">
                         <i class="bi bi-circle"></i><span>Liste des prestataires</span>
                     </a>
                 </li>
-                
+
             </ul>
         </li>
-        <!--End Partners-->
+        <!--End users-->
+        <!--Reservation-->
+        <li class="nav-item">
+            <a class="nav-link collapsed @if (request()->is('reservations*')) active @endif" data-bs-target="#reservations"
+                data-bs-toggle="collapse" href="#">
+                <i class="bi bi-calendar-check"></i><span>Prestataires</span><i
+                    class="bi bi-chevron-down ms-auto @if (request()->is('reservations*')) rotate180 @endif"></i>
+            </a>
+            <ul id="reservations" class="nav-content collapse @if (request()->is('reservations*')) show @endif"
+                data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('reservations.index') }}"
+                        class="{{ request()->routeIs('reservations.index') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span>Liste des prestataires</span>
+                    </a>
+                </li>
 
+            </ul>
+        </li>
+        <!--End reservations-->
 
     </ul>
 

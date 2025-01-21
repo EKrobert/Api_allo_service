@@ -17,13 +17,13 @@ class AdminSeeder extends Seeder
     {
         //
         DB::table('admin')->insert([
-            'username' => 'Admin',
-            'password' => bcrypt('Admin0.2024'),
+            'username' => 'admin',
+            'password' => bcrypt('Admin.2025'),
         ]);
 
         DB::table('admin')->insert([
-            'username' => 'moi',
-            'password' => bcrypt('Admin.2024'),
+            'username' => 'username',
+            'password' => bcrypt('User.2025'),
         ]);
 
        

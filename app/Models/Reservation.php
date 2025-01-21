@@ -16,6 +16,7 @@ class Reservation extends Model
         'service_id',
         'statut',
         'reservation_date',
+        'adresse'
     ];
 
     // Relation avec le Prestataire
@@ -32,5 +33,10 @@ class Reservation extends Model
     public function client()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public static function getAllReservations()
+    {
+        return self::with(['client', 'prestataire', 'service'])->get();
     }
 }

@@ -15,8 +15,6 @@ class ReservationController extends Controller
     {
         $client = Auth::user()->client;
 
-        dd($client);
-        // Vérifier si le client existe
         if (!$client) {
             return response()->json([
                 'success' => false,
@@ -25,7 +23,7 @@ class ReservationController extends Controller
         }
 
         // Récupérer toutes les réservations du client
-        $reservations = Reservation::with(['client', 'prestataire', 'service'])
+        $reservations = Reservation::with(['client.user','client', 'prestataire', 'prestataire.user', 'service'])
             ->where('client_id', $client->id) // Filtrer par l'ID du client
             ->get();
 
@@ -55,6 +53,7 @@ class ReservationController extends Controller
             'service_id' => 'required|exists:services,id',
             'reservation_date' => 'required|date|after_or_equal:today', // Date uniquement
             'commentaire' => 'nullable|string',
+            'adresse' => 'required|string',
         ]);
 
         // Si la validation échoue, retourner une réponse d'erreur
@@ -70,6 +69,7 @@ class ReservationController extends Controller
             'reservation_date' => $request->reservation_date, // Format Y-m-d
             'statut' => 'en_attente', // Statut par défaut
             'commentaire' => $request->commentaire,
+            'adresse' => $request->adresse,
         ]);
 
         // Retourner une réponse de succès
@@ -79,4 +79,37 @@ class ReservationController extends Controller
             'data' => $reservation,
         ], 201);
     }
+
+
+
+    public function details($id)
+    {
+        // Récupérer le prestataire authentifié
+        $client = Auth::user()->client;
+
+        // Vérifier si le client est bien authentifié
+        if (!$client) {
+            return response()->json(['message' => 'Client non trouvé'], 404);
+        }
+
+        // Récupérer la réservation en fonction de l'ID et vérifier qu'elle appartient au prestataire
+        $reservation = Reservation::where('id', $id)
+            ->where('client_id', $client->id)
+            ->with(['service', 'prestataire.user'])
+            ->first();
+
+        // Vérifier si la réservation existe
+        if (!$reservation) {
+            return response()->json(['message' => 'Réservation non trouvée'], 404);
+        }
+
+        // Retourner les détails de la réservation
+        return response()->json([
+            'reservation' => $reservation,
+            'service' => $reservation->service,
+            'prestataire' => $reservation->prestataire->user,
+        ], 200);
+    }
+
+
 }

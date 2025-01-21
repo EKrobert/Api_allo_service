@@ -35,9 +35,15 @@ class ClientController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $client)
     {
-        //
+        // Charge les relations nécessaires
+        $user = $client->load('client');
+
+
+        // Passe les données à la vue
+        return view('clients.profile', ['user' => $user ]);
+        
     }
 
     /**

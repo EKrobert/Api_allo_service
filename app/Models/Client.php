@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Client extends User
 {
+    
     // Relation avec la table `users`
     public function user()
     {

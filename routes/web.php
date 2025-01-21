@@ -22,11 +22,8 @@ Route::middleware('auth:admin')->group(function () {
     //------------ Route de logout ------
     Route::get('/logout', [AuthController::class, 'deconnexion'])->name('logout');
     Route::resource('services', ServicesController::class);
-    Route::resource('partners', PartnerController::class);
-    Route::post('partners/enable/{partner}', [PartnerController::class, 'enable'])->name('partners.enable'); /// enable
-    Route::post('partners/disable/{partner}', [PartnerController::class, 'disable'])->name('partners.disable'); //disable
+    Route::resource('/users', PartnerController::class);
     Route::resource('reservations', ReservationController::class);
     Route::resource('clients', ClientController::class);
-    Route::post('clients/enable/{partner}', [PartnerController::class, 'enable'])->name('clients.enable'); /// enable
-    Route::post('clients/disable/{partner}', [PartnerController::class, 'disable'])->name('clients.disable'); //disable
+    
 });

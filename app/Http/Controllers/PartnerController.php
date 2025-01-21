@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Prestataire;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,7 @@ class PartnerController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::where('role', 'provider')->get();
         return view('partners.partnersList', compact('users'));
     }
 
@@ -35,9 +36,21 @@ class PartnerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $user)
     {
-        //
+        // Charge les relations nécessaires
+        $user->load('prestataire.services');
+
+        // Extrait les données nécessaires
+        $prestataire = $user->prestataire;
+        $services = $prestataire ? $prestataire->services : collect(); // Utilise une collection vide si pas de prestataire
+
+        // Passe les données à la vue
+        return view('partners.profile', [
+            'user' => $user,
+            'prestataire' => $prestataire,
+            'services' => $services,
+        ]);
     }
 
     /**

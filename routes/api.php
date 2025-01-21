@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\AuthenticationController;
-use App\Http\Controllers\Api\Client\ProfilController;
 use App\Http\Controllers\Api\Client\ReservationController;
-use App\Http\Controllers\Api\Provider\ProfilController as ProviderProfilController;
+use App\Http\Controllers\Api\Client\ServiceController as ClientServiceController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\Provider\ReservationController as ProviderReservationController;
 use App\Http\Controllers\Api\Provider\ServiceController;
 use Illuminate\Http\Request;
@@ -23,11 +23,10 @@ Route::middleware(['auth:sanctum', 'role:client'])
         //Reservations
         Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
         Route::post('/reservation', [ReservationController::class, 'store'])->name('reservations.store');
-
-        //Profil
-        Route::get('/profil', [ProfilController::class, 'show']);
-        Route::put('/profil', [ProfilController::class, 'updateProfile']);
-    });
+        Route::get('/reservation/{id}', [ReservationController::class, 'details'])->name('reservations.details');
+        Route::get('/services', [ClientServiceController::class, 'index']);
+        Route::get('/services/{prestataire_id}', [ServiceController::class, 'index']);
+});
 
 Route::middleware(['auth:sanctum', 'role:provider'])
     ->prefix('provider')
@@ -35,13 +34,24 @@ Route::middleware(['auth:sanctum', 'role:provider'])
     ->group(function () {
         // Routes pour les providers
         Route::get('/reservations', [ProviderReservationController::class, 'index'])->name('reservations.index');
+        Route::get('/reservation/{id}', [ProviderReservationController::class, 'details'])->name('reservations.details');
         Route::post('/reservations', [ProviderReservationController::class, 'store'])->name('reservations.store');
-        Route::get('/profil', [ProfilController::class, 'show'])->name('profil.show');
+        Route::post('/reservation/{reservationId}/validate', [ProviderReservationController::class, 'validateReservation']);
         //services
         Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
         Route::post('/add/service', [ServiceController::class, 'providerService']);
         Route::get('/recuperer/services', [ServiceController::class, 'getPrestataireServices']);
-        //profil
-        Route::get('/profil', [ProviderProfilController::class, 'show']);
-        Route::put('/profil', [ProviderProfilController::class, 'updateProfile']);
+        // Récupérer les services auxquels le prestataire s'est abonné
+        Route::get('/my/services', [ServiceController::class, 'getSubscribedServices']);
+        // Mettre à jour le prix d'un service
+        Route::put('/services/{serviceId}/update-price', [ServiceController::class, 'updateServicePrice']);
     });
+
+//Route commune
+Route::middleware('auth:sanctum')->prefix('user')->group(function () {
+    //Profil
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::put('/profile/update', [ProfileController::class, 'updateProfile']);
+    Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+    Route::post('/logout', [AuthenticationController::class, 'logout']);
+});

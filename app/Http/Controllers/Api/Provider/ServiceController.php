@@ -18,18 +18,45 @@ class ServiceController extends Controller
     public function index()
     {
         try {
-            // Récupérer tous les services disponibles
-            $services = Service::all();
-            // Vérifier si des services ont été trouvés
-            if ($services->isEmpty()) {
+            // Récupérer l'utilisateur connecté
+            $user = Auth::user();
+
+            // Vérifier si l'utilisateur est un prestataire
+            if (!$user || !$user->prestataire) {
                 return response()->json([
-                    'message' => 'Aucun service disponible',
+                    'success' => false,
+                    'message' => 'Utilisateur non trouvé ou non prestataire.',
                 ], 404);
             }
+
+            // Récupérer le prestataire associé à l'utilisateur
+            $prestataire = $user->prestataire;
+
+            // Récupérer les IDs des services auxquels le prestataire est déjà abonné
+            $subscribedServiceIds = $prestataire->services()->pluck('services.id');
+
+            // Récupérer tous les services disponibles
+            $allServices = Service::all();
+
+            // Filtrer les services non abonnés
+            $unsubscribedServices = $allServices->reject(function ($service) use ($subscribedServiceIds) {
+                return $subscribedServiceIds->contains($service->id);
+            });
+
+            // Vérifier s'il y a des services non abonnés
+            if ($unsubscribedServices->isEmpty()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Le prestataire est abonné à tous les services disponibles.',
+                    'data' => [],
+                ], 200);
+            }
+
+            // Retourner les services non abonnés
             return response()->json([
                 'success' => true,
-                'message' => 'Services récupérés avec succès',
-                'data' => $services,
+                'message' => 'Services non abonnés récupérés avec succès.',
+                'data' => $unsubscribedServices,
             ], 200);
         } catch (ModelNotFoundException $e) {
             // Gestion spécifique pour les erreurs de modèle (si un service est introuvable)
@@ -50,7 +77,6 @@ class ServiceController extends Controller
     {
         // Validation des données entrantes
         $validator = Validator::make($request->all(), [
-            // 'prestataire_id' => 'required|exists:prestataires,id',
             'service_id' => 'required|exists:services,id',
             'prix' => 'required|numeric|min:0',
         ]);
@@ -68,38 +94,31 @@ class ServiceController extends Controller
         return response()->json(['message' => 'Service ajouté avec succès'], 200);
     }
 
-
-    public function getPrestataireServices()
+    public function getSubscribedServices()
     {
-        // Récupérer l'utilisateur authentifié
-        $user = Auth::user();
+        // Récupérer le prestataire authentifié
+        $prestataire = Auth::user()->prestataire;
 
-        // Vérifier si l'utilisateur est un prestataire
-        if (!$user->prestataire) {
-            return response()->json(['message' => 'Cet utilisateur n\'est pas un prestataire'], 404);
+        // Récupérer les services auxquels le prestataire s'est abonné avec le prix
+        $services = $prestataire->services()->withPivot('prix')->get();
+
+        // Retourner la réponse JSON
+        return response()->json(['services' => $services], 200);
+    }
+
+
+    public function updateServicePrice(Request $request, $serviceId)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'prix' => 'required|numeric|min:0',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
         }
-
-        // Récupérer le prestataire associé à l'utilisateur
-        $prestataire = $user->prestataire;
-        
-        // Récupérer les services du prestataire avec le prix (depuis la table pivot)
-        $services = $prestataire->services;
-
-        
-        // Formater la réponse pour inclure les détails du service et le prix
-        $formattedServices = $services->map(function ($service) {
-            return [
-                'id' => $service->id, // ID du service (depuis la table services)
-                'nom' => $service->name, // Nom du service (depuis la table services)
-                'prix' => $service->pivot->prix, // Prix du service (depuis la table pivot prestataire_service)
-            ];
-        });
-
-        // Retourner les services dans la réponse
-        return response()->json([
-            'success' => true,
-            'message' => 'Services récupérés avec succès',
-            'data' => $formattedServices,
-        ], 200);
+        $data = $validator->validated();
+        $prestataire = Auth::user()->prestataire;
+        $prestataire->services()->updateExistingPivot($serviceId, ['prix' => $data['prix']]);
+        return response()->json(['message' => 'Prix mis à jour avec succès'], 200);
     }
 }
