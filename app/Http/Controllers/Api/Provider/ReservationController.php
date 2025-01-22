@@ -55,7 +55,7 @@ class ReservationController extends Controller
         // Récupérer la réservation en fonction de l'ID et vérifier qu'elle appartient au prestataire
         $reservation = Reservation::where('id', $id)
             ->where('prestataire_id', $prestataire->id)
-            ->with(['service', 'client.user'])
+            ->with(['service', 'client.user', 'evaluation']) // Charger l'évaluation
             ->first();
 
         // Vérifier si la réservation existe
@@ -63,14 +63,14 @@ class ReservationController extends Controller
             return response()->json(['message' => 'Réservation non trouvée'], 404);
         }
 
-        // Retourner les détails de la réservation
+        // Retourner les détails de la réservation, y compris l'évaluation
         return response()->json([
             'reservation' => $reservation,
             'service' => $reservation->service,
             'client' => $reservation->client->user,
+            'evaluation' => $reservation->evaluation, // Ajouter l'évaluation
         ], 200);
     }
-
     public function validateReservation($reservationId)
     {
         // Récupérer le prestataire authentifié

@@ -39,4 +39,12 @@ class Reservation extends Model
     {
         return self::with(['client', 'prestataire', 'service'])->get();
     }
+
+    /**
+     * Obtenir l'évaluation associée à cette réservation.
+     */
+    public function evaluation()
+    {
+        return $this->hasOne(Evaluation::class);
+    }
 }

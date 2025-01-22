@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id')->constrained('users')->onDelete('cascade'); // Clé étrangère vers users (clients)
-            $table->foreignId('prestataire_id')->constrained('users')->onDelete('cascade'); // Clé étrangère vers users (prestataires)
+            $table->foreignId('client_id')->constrained()->onDelete('cascade'); // Clé étrangère vers users (clients)
+            $table->foreignId('prestataire_id')->constrained()->onDelete('cascade'); // Clé étrangère vers users (prestataires)
             $table->foreignId('service_id')->constrained('services')->onDelete('cascade'); // Clé étrangère vers services
             $table->string('statut')->default('en_attente'); // Statut de la réservation
             $table->string('adresse');

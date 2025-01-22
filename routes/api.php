@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthenticationController;
+use App\Http\Controllers\Api\Client\EvaluationController;
 use App\Http\Controllers\Api\Client\ReservationController;
 use App\Http\Controllers\Api\Client\ServiceController as ClientServiceController;
 use App\Http\Controllers\Api\ProfileController;
@@ -16,6 +17,7 @@ Route::get('/user', function (Request $request) {
 Route::post('/register', [AuthenticationController::class, 'register']);
 Route::post('/login', [AuthenticationController::class, 'login']);
 
+//Client route
 Route::middleware(['auth:sanctum', 'role:client'])
     ->prefix('client')
     ->name('client.')
@@ -26,8 +28,10 @@ Route::middleware(['auth:sanctum', 'role:client'])
         Route::get('/reservation/{id}', [ReservationController::class, 'details'])->name('reservations.details');
         Route::get('/services', [ClientServiceController::class, 'index']);
         Route::get('/services/{prestataire_id}', [ServiceController::class, 'index']);
+        Route::post('/evaluations', [EvaluationController::class, 'store']);
 });
 
+//provider route
 Route::middleware(['auth:sanctum', 'role:provider'])
     ->prefix('provider')
     ->name('provider.')

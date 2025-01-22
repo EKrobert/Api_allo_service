@@ -23,7 +23,7 @@ class ReservationController extends Controller
         }
 
         // Récupérer toutes les réservations du client
-        $reservations = Reservation::with(['client.user','client', 'prestataire', 'prestataire.user', 'service'])
+        $reservations = Reservation::with(['client.user', 'client', 'prestataire', 'prestataire.user', 'service'])
             ->where('client_id', $client->id) // Filtrer par l'ID du client
             ->get();
 
@@ -84,7 +84,7 @@ class ReservationController extends Controller
 
     public function details($id)
     {
-        // Récupérer le prestataire authentifié
+        // Récupérer le client authentifié
         $client = Auth::user()->client;
 
         // Vérifier si le client est bien authentifié
@@ -92,29 +92,31 @@ class ReservationController extends Controller
             return response()->json(['message' => 'Client non trouvé'], 404);
         }
 
-        // Récupérer la réservation en fonction de l'ID et vérifier qu'elle appartient au prestataire
+        // Récupérer la réservation en fonction de l'ID et vérifier qu'elle appartient au client
         $reservation = Reservation::where('id', $id)
             ->where('client_id', $client->id)
-            ->with(['service', 'prestataire.user'])
+            ->with(['service', 'prestataire.user', 'evaluation']) // Charger l'évaluation
             ->first();
 
         // Vérifier si la réservation existe
         if (!$reservation) {
             return response()->json(['message' => 'Réservation non trouvée'], 404);
         }
+
+        // Récupérer le prix du service pour ce prestataire
         $price = $reservation->prestataire->services()
-        ->where('services.id', $reservation->service_id)
-        ->first()
-        ->pivot
-        ->prix;
-        // Retourner les détails de la réservation
+            ->where('services.id', $reservation->service_id)
+            ->first()
+            ->pivot
+            ->prix;
+
+        // Retourner les détails de la réservation, y compris l'évaluation
         return response()->json([
             'reservation' => $reservation,
             'service' => $reservation->service,
             'prestataire' => $reservation->prestataire->user,
-            'prix'=> $price,
+            'prix' => $price,
+            'evaluation' => $reservation->evaluation, // Ajouter l'évaluation
         ], 200);
     }
-
-
 }

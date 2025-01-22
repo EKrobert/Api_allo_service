@@ -11,14 +11,14 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-Route::middleware('auth:admin')->get('/', [IndexController::class, 'index'])->name('index');
+Route::middleware('auth')->get('/', [IndexController::class, 'index'])->name('index');
 //------------ Login --------------
-Route::get('/login', [AuthController::class, 'loginVue'])->name('login')->middleware('guest:admin');
+Route::get('/login', [AuthController::class, 'loginVue'])->name('login');
 //------------ Route pour le traitement de login ---------
 Route::post('/login_admin', [AuthController::class, 'login'])->name('login_admin');
 
 
-Route::middleware('auth:admin')->group(function () {
+Route::middleware('auth')->group(function () {
     //------------ Route de logout ------
     Route::get('/logout', [AuthController::class, 'deconnexion'])->name('logout');
     Route::resource('services', ServicesController::class);

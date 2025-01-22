@@ -99,8 +99,7 @@
                                             <div class="input-group">
                                                 <input type="password" class="form-control" id="pass"
                                                     placeholder="" name="password" value="{{ old('password') }}"
-                                                    required
-                                                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$">
+                                                    required>
                                                 <div class="input-group-append">
                                                     <button class="btn btn-outline-secondary" type="button"
                                                         id="togglePassword">
